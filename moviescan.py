@@ -37,14 +37,19 @@ parser.add_argument('-s', "--super", action="store_true", help='super film crop'
 parser.add_argument('--gain_red', type=float, default=1.4, help='Weißabgleich rot')
 parser.add_argument('--gain_blue', type=float, default=1.4, help='Weißabgleich blau')
 parser.add_argument('--awb', action="store_true", help="Automatischer Weißabgleich")
+parser.add_argument('-d', '--dir', default='scan', help='Verzeichnis zum Ablegen der Datei')
 parser.add_argument('file_prefix')
 
 args = parser.parse_args()
 
+try:
+    os.stat('./%s' % args.dir)
+except:
+    os.mkdir('./%s' % args.dir)
 
 # Statistic variables
 file_prefix = ""
-filename = "image00000.jpg"
+filename = ""
 max_thread_num = 0
 max_captime = 0
 elapsed_time = 0
@@ -131,7 +136,7 @@ with picamera.PiCamera() as camera:
             runtime_1 = time.time() # save start of shooting
 
             # Create file name
-            filename = '%s%05d.jpg' % (args.file_prefix, n) # Numberred file name for later video creation
+            filename = './%s/%s%05d.jpg' % (args.dir, args.file_prefix, n) # Numberred file name for later video creation
 
             # Measure image time
             captime = time.time();
